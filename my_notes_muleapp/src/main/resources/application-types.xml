@@ -27,4 +27,13 @@ type MiFormato = Array<{|  id: Number {"typeId": "int"},   name: String,   messa
       </types:output-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#bd90fffb-9a85-4e29-b857-b751b58dd7ac">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="MiFormato"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>

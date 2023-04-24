@@ -16,28 +16,18 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config_8082" path="/Notes" allowedMethods="POST">
 			<ee:repeatable-file-store-stream bufferUnit="MB" />
 		</http:listener>
-		<set-payload value='{"message": "Note added successfully, but pending"}' doc:name="Set Payload" doc:id="8fc764b5-f24f-453b-bf55-dd28ec28100b" />
-	</flow>
-	<flow name="my_notes_muleappFlow" doc:id="7779286c-92e7-4f40-ad62-6217b938a5a6" >
-		<http:listener doc:name="Listener" doc:id="09e44b34-0e2f-4ddd-a727-237b9d9c0514" path="/Notes" config-ref="HTTP_Listener_config_8082" allowedMethods="GET"/>
-		<db:select doc:name="Select notes" doc:id="212d8630-c0f5-49e9-aa98-5649c5ee2249" config-ref="Database_Config">
-			<db:sql ><![CDATA[SELECT * FROM Notes]]></db:sql>
-		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="9fa7b10a-6ff5-4a1d-8291-e9a0f44e9a0a" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-payload map ( payload01 , indexOfPayload01 ) -> {
-	id: payload01.id,
-	name: payload01.title as String,
-	message: payload01.content as String,
-	userid: payload01.userid,
-	datecreated: payload01.datecreated as String
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="018273d9-ee15-4cea-b3a1-1d320af6e6d7" />
+		<db:insert doc:name="Insert_note" doc:id="bd90fffb-9a85-4e29-b857-b751b58dd7ac" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO Notes (title, content, userid, datecreated)
+VALUES ( :titleInput , :contentInput, :useridInput, :datecreated);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+'titleInput': payload.name,
+'contentInput': payload.message,
+'useridInput': payload.userid,
+'datecreated': now() as String {format: "yyyy-MM-dd HH:mm:ss"}
+}]]]></db:input-parameters>
+		</db:insert>
+		<set-payload value='#[output application/json&#10;---&#10;{&#10;	"message": "Row added successfully"&#10;}]' doc:name="Set Payload" doc:id="f7028f4a-a5a7-4ca5-b8d6-b70cc9f79d41" />
+		<logger level="INFO" doc:name="Logger" doc:id="0f205640-2bf6-4866-a49b-f6e39ee899ab" />
 	</flow>
 	<flow name="my_notes_muleappFlow_Get" doc:id="91fd1a1f-0980-4632-876d-1101f56d992d">
 		<http:listener doc:name="Listener" doc:id="b4e17965-bada-4816-a805-8c51e66593b6" config-ref="HTTP_Listener_config_8082" path="/Notes/{ID}" allowedMethods="GET" />
