@@ -38,3 +38,5 @@ local.properties
 flows/
 target/
 **/*.mflow
+/.mule/plugins-tmp/**/*
+##/.mule/plugins-tmp/repository/7.14.0/workingDir/4.4.0-20220824/com.hazelcast.instance.NodeExtension12070377657225119425tmp
