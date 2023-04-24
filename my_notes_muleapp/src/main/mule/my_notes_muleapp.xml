@@ -12,6 +12,12 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="b9b0d097-d422-4b76-abe3-bed935a8c286" >
 		<db:my-sql-connection host="localhost" port="3306" user="root" password="testing" database="testing"/>
 	</db:config>
+	<flow name="my_notes_muleappFlow_post" doc:id="aad579fb-6f71-467c-b664-e87748292632">
+		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config_8082" path="/Notes" allowedMethods="POST">
+			<ee:repeatable-file-store-stream bufferUnit="MB" />
+		</http:listener>
+		<set-payload value='{"message": "Note added successfully, but pending"}' doc:name="Set Payload" doc:id="8fc764b5-f24f-453b-bf55-dd28ec28100b" />
+	</flow>
 	<flow name="my_notes_muleappFlow" doc:id="7779286c-92e7-4f40-ad62-6217b938a5a6" >
 		<http:listener doc:name="Listener" doc:id="09e44b34-0e2f-4ddd-a727-237b9d9c0514" path="/Notes" config-ref="HTTP_Listener_config_8082" allowedMethods="GET"/>
 		<db:select doc:name="Select notes" doc:id="212d8630-c0f5-49e9-aa98-5649c5ee2249" config-ref="Database_Config">
@@ -75,11 +81,5 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="e99ccb91-523d-4ade-8282-bab9e37362ee" />
-	</flow>
-	<flow name="my_notes_muleappFlow_post" doc:id="aad579fb-6f71-467c-b664-e87748292632" >
-		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config_8082" path="/Notes" allowedMethods="POST">
-			<ee:repeatable-file-store-stream bufferUnit="MB" />
-		</http:listener>
-		<set-payload value='#["Mi primer Mule App"]' doc:name="Set Payload" doc:id="83a495f0-6d1c-403b-ac1f-4ab53a71cd0d" />
 	</flow>
 </mule>
