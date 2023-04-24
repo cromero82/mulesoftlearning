@@ -33,6 +33,49 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="018273d9-ee15-4cea-b3a1-1d320af6e6d7" />
 	</flow>
+	<flow name="my_notes_muleappFlow_Get" doc:id="91fd1a1f-0980-4632-876d-1101f56d992d">
+		<http:listener doc:name="Listener" doc:id="b4e17965-bada-4816-a805-8c51e66593b6" config-ref="HTTP_Listener_config_8082" path="/Notes/{ID}" allowedMethods="GET" />
+		<db:select doc:name="Select notes" doc:id="09b75528-961f-4ed6-955d-872c3f2b2417" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM Notes where ID = :ID]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'ID': attributes.uriParams.ID}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="a4da71b1-331a-44e0-9661-03957b955f9c">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	id: payload01.id,
+	name: payload01.title as String,
+	message: payload01.content as String,
+	userid: payload01.userid,
+	datecreated: payload01.datecreated as String
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="47151f5b-efef-4ece-8a4c-e875a74a1246" />
+	</flow>
+	<flow name="my_notes_muleappFlow_Get_all" doc:id="8bbc8d1e-a7d1-4685-8db9-1cab4c103826">
+		<http:listener doc:name="Listener" doc:id="e7338e01-c413-4f69-a4aa-81137a4dc6e0" config-ref="HTTP_Listener_config_8082" path="/Notes" allowedMethods="GET" />
+		<db:select doc:name="Select notes" doc:id="a18ce5cf-281e-498c-b876-3ee5d25bdb15" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM Notes]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="a8995437-e429-4d9b-b71a-633c99acfabe">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	id: payload01.id,
+	name: payload01.title as String,
+	message: payload01.content as String,
+	userid: payload01.userid,
+	datecreated: payload01.datecreated as String
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e99ccb91-523d-4ade-8282-bab9e37362ee" />
+	</flow>
 	<flow name="my_notes_muleappFlow_post" doc:id="aad579fb-6f71-467c-b664-e87748292632" >
 		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config_8082" path="/Notes" allowedMethods="POST">
 			<ee:repeatable-file-store-stream bufferUnit="MB" />
