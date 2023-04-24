@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	</http:listener-config>
 	<flow name="my_notes_muleappFlow" doc:id="7779286c-92e7-4f40-ad62-6217b938a5a6" >
 		<http:listener doc:name="Listener" doc:id="09e44b34-0e2f-4ddd-a727-237b9d9c0514" path="/Notes" config-ref="HTTP_Listener_config" allowedMethods="GET"/>
-		<set-payload value='#["Mi primer Mule App"]' doc:name="Set Payload" doc:id="3bbe2ed1-a4f7-499f-81a2-8deac8b41f6a" />
+		<set-payload value='#["Mi primer Mule App mod"]' doc:name="Set Payload" doc:id="3bbe2ed1-a4f7-499f-81a2-8deac8b41f6a" />
 	</flow>
 	<flow name="my_notes_muleappFlow_post" doc:id="aad579fb-6f71-467c-b664-e87748292632" >
 		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config" path="/Notes" allowedMethods="POST"/>
