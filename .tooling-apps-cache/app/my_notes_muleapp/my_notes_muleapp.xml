@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="b90c3de6-8a60-478b-8b09-9d45970f10ec" >
 		<http:listener-connection host="0.0.0.0" port="8082" />
 	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="b9b0d097-d422-4b76-abe3-bed935a8c286" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="testing" database="testing"/>
+	</db:config>
 	<flow name="my_notes_muleappFlow" doc:id="7779286c-92e7-4f40-ad62-6217b938a5a6" >
 		<http:listener doc:name="Listener" doc:id="09e44b34-0e2f-4ddd-a727-237b9d9c0514" path="/Notes" config-ref="HTTP_Listener_config" allowedMethods="GET"/>
-		<set-payload value='#["Mi primer Mule App mod"]' doc:name="Set Payload" doc:id="3bbe2ed1-a4f7-499f-81a2-8deac8b41f6a" />
+		<db:select doc:name="Select notes" doc:id="212d8630-c0f5-49e9-aa98-5649c5ee2249" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM Notes]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="9fa7b10a-6ff5-4a1d-8291-e9a0f44e9a0a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="018273d9-ee15-4cea-b3a1-1d320af6e6d7" />
 	</flow>
 	<flow name="my_notes_muleappFlow_post" doc:id="aad579fb-6f71-467c-b664-e87748292632" >
-		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config" path="/Notes" allowedMethods="POST"/>
+		<http:listener doc:name="Listener" doc:id="e5058c87-8617-4bc3-bc5c-511b7015f0fd" config-ref="HTTP_Listener_config" path="/Notes" allowedMethods="POST">
+			<ee:repeatable-file-store-stream bufferUnit="MB" />
+		</http:listener>
 		<set-payload value='#["Mi primer Mule App"]' doc:name="Set Payload" doc:id="83a495f0-6d1c-403b-ac1f-4ab53a71cd0d" />
 	</flow>
 </mule>

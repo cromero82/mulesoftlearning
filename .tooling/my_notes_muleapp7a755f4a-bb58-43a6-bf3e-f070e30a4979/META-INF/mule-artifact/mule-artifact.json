@@ -6,13 +6,12 @@
   "redeploymentEnabled": true,
   "name": "com.mycompany:my_notes_muleapp:1.0.0-SNAPSHOT",
   "minMuleVersion": "4.4.0",
-  "requiredProduct": "MULE_EE",
+  "requiredProduct": "MULE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
     "attributes": {
       "exportedPackages": [],
       "exportedResources": [
-        "application-types.xml",
         "log4j2.xml",
         "my_notes_muleapp.xml"
       ]
