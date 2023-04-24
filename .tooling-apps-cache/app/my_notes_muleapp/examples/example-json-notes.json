@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "datecreated": "2023-04-24T14:01:28",
+        "title": "Sample Title two",
+        "userid": 2,
+        "content": "Sample content for the note two."
+    },
+    {
+        "id": 2,
+        "datecreated": "2023-04-24T14:01:32",
+        "title": "Sample Title",
+        "userid": 1,
+        "content": "Sample content for the note."
+    }
+]

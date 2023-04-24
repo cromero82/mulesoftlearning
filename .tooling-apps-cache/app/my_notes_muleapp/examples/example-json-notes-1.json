@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "Sample Title two",
+        "message": "Sample content for the note two.",
+		"userid": 2,
+		"datecreated": "2023-04-24T14:01:28"
+    },
+    {
+        "id": 2,
+        "name": "Sample Title",
+        "message": "Sample content for the note.",
+		"userid": 1,
+		"datecreated": "2023-04-24T14:01:32"
+    }
+]

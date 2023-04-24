@@ -1,5 +1,30 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
-  <types:catalog/>
-  <types:enrichment select="#7779286c-92e7-4f40-ad62-6217b938a5a6"/>
+  <types:catalog>
+    <types:type name="MiFormato" format="json">
+      <types:shape format="weave" example="examples/example-json-notes-1.json"><![CDATA[%dw 2.0
+
+type MiFormato = Array<{|  id: Number {"typeId": "int"},   name: String,   message: String,   userid: Number {"typeId": "int"},   datecreated: String|}> {"example": "[{\\\"id\\\":1,\\\"name\\\":\\\"Sample Title two\\\",\\\"message\\\":\\\"Sample content for the note two.\\\",\\\"userid\\\":2,\\\"datecreated\\\":\\\"2023-04-24T14:01:28\\\"},{\\\"id\\\":2,\\\"name\\\":\\\"Sample Title\\\",\\\"message\\\":\\\"Sample content for the note.\\\",\\\"userid\\\":1,\\\"datecreated\\\":\\\"2023-04-24T14:01:32\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#7779286c-92e7-4f40-ad62-6217b938a5a6">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="MiFormato"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#9fa7b10a-6ff5-4a1d-8291-e9a0f44e9a0a">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="MiFormato"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
 </types:mule>

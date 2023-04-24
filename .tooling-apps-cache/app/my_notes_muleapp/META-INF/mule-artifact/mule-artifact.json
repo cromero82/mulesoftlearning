@@ -13,6 +13,8 @@
       "exportedPackages": [],
       "exportedResources": [
         "application-types.xml",
+        "examples/example-json-notes-1.json",
+        "examples/example-json-notes.json",
         "log4j2.xml",
         "my_notes_muleapp.xml"
       ]
