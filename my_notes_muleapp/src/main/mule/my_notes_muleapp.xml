@@ -72,4 +72,55 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="e99ccb91-523d-4ade-8282-bab9e37362ee" />
 	</flow>
+	<flow name="my_notes_muleappFlow_Get_calc" doc:id="86cad78e-abe2-4e4e-b7d5-5be69c3bcbca" >
+		<http:listener doc:name="Listener" doc:id="6f8005c0-dcd8-46db-b828-961a9cc801f8" config-ref="HTTP_Listener_config_8082" path="/Notes/calc/{action}" allowedMethods="GET" />
+		<set-variable doc:name="Set Variable" doc:id="8e61cf3d-4824-42c0-a2ca-d534371a2ca2" variableName="totalOperation" value="0" />
+		<db:select doc:name="Select notes" doc:id="da1e1a45-0f7a-4607-9e5a-64735f3d7e72" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM Notes]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="28624829-ef66-4fa6-aba6-4009ca5274b0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var total = 0
+---
+
+payload map ( payload01 , indexOfPayload01 ) -> {
+	id: payload01.id,
+	name: payload01.title as String,
+	message: payload01.content as String,
+	userid: payload01.userid,
+	datecreated: payload01.datecreated as String,
+	total: total
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="da542ce4-2627-4a2a-ab22-8a1bb06040cd" />
+	</flow>
+	<flow name="my_notes_muleappFlow_Get_calc-2" doc:id="51613a8e-f58c-4e77-b2ed-164b6004b31a" >
+		<http:listener doc:name="Listener" doc:id="ac379b05-eac8-453e-953e-43f2b1fca2c2" config-ref="HTTP_Listener_config_8082" path="/Notes/calc2/{action}" allowedMethods="GET" />
+		<set-variable value="0" doc:name="Set Variable" doc:id="4a414903-ac73-491a-a48c-7b9983b6d984" variableName="totalOperation" />
+		<db:select doc:name="Select notes" doc:id="91b66311-7aab-4a62-85bd-2bed83565ef5" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM Notes]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="a9c27d10-79de-47e0-b706-292b176d5a75" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var total = 0
+---
+
+payload map ( payloadItem , index ) -> {
+	id: payloadItem.id,
+	name: payloadItem.title as String,
+	message: payloadItem.content as String,
+	userid: payloadItem.userid,
+	datecreated: payloadItem.datecreated as String,
+	score: payloadItem.score,
+	accumulatedScore: (payload[0 to index].*score reduce ((sum, score) -> sum + score))
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="4b5c5bed-7926-4272-9d79-b0cb8a7dc9e5" />
+	</flow>
 </mule>
