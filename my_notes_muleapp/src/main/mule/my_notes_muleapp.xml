@@ -107,7 +107,6 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
-var total = 0
 ---
 
 payload map ( payloadItem , index ) -> {
@@ -118,6 +117,24 @@ payload map ( payloadItem , index ) -> {
 	datecreated: payloadItem.datecreated as String,
 	score: payloadItem.score,
 	accumulatedScore: (payload[0 to index].*score reduce ((sum, score) -> sum + score))
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="a1afc51f-e40e-4d79-91c0-0022ba8a98f8">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var average = payload reduce (sail, accumulator = 0) -> accumulator + sail.score
+---
+payload map ( payloadItem , index ) -> {
+	id: payloadItem.id,
+	name: payloadItem.name as String,
+	message: payloadItem.message as String,
+	userid: payloadItem.userid,
+	datecreated: payloadItem.datecreated as String,
+	score: payloadItem.score,
+	accumulatedScore: payloadItem.accumulatedScore,
+	averageScore: average
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
