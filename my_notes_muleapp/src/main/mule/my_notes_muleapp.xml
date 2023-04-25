@@ -124,7 +124,7 @@ payload map ( payloadItem , index ) -> {
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
-var average = payload reduce (sail, accumulator = 0) -> accumulator + sail.score
+var average = payload reduce ((item, acc = 2) -> acc + item.score)
 ---
 payload map ( payloadItem , index ) -> {
 	id: payloadItem.id,
